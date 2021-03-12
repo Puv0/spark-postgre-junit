@@ -1,6 +1,7 @@
 package common
 
-import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
+import models.LegalCustomer
+import org.apache.spark.sql.{DataFrame, Dataset, SaveMode, SparkSession}
 import org.slf4j.LoggerFactory
 
 import java.util.Properties
@@ -16,34 +17,34 @@ object PostgreCommon{
     pgTable
   }
 
-  def getProperties(): Properties ={
+  def getPostgreProperties(): Properties ={
     val pgConnectionProperties = new Properties()
     pgConnectionProperties.put("user","postgres")
     pgConnectionProperties.put("password","postgres")
-    logger.warn("GetProperties")
+    logger.warn("GetPostgreProperties")
     pgConnectionProperties
   }
 
-  def getUrl():String = {
+  def getPostgreUrl():String = {
     val url = "jdbc:postgresql://localhost:5432/Test"
-    logger.warn("GetURL")
+    logger.warn("GetPostgreURL")
     url
   }
 
   def readFromPostgreTable(tableName:String, spark:SparkSession): DataFrame = {
-    val df = spark.read.jdbc(getUrl(),getTable(tableName),getProperties())
+    val df = spark.read.jdbc(getPostgreUrl(),getTable(tableName),getPostgreProperties())
     df
   }
-  def writeToPostgreTable(df:DataFrame,tableName: String):Unit = {
-    val user = getProperties().getProperty("user")
-    val password = getProperties().getProperty("password")
+  def writeToPostgreTable(df:Dataset[LegalCustomer], tableName: String):Unit = {
+    val user = getPostgreProperties().getProperty("user")
+    val password = getPostgreProperties().getProperty("password")
     logger.warn("Writing session started")
    try {
 
     df.write
       .mode(SaveMode.Append)
       .format("jdbc")
-      .option("url",getUrl())
+      .option("url",getPostgreUrl())
       .option("dbtable",getTable(tableName))
       .option("user", user)
       .option("password",password)

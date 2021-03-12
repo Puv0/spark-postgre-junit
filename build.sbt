@@ -10,7 +10,10 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % sparkVersion,
   "org.apache.spark" %% "spark-hive" % sparkVersion,
   "org.postgresql" % "postgresql" % "42.2.16",
-  "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.8.1" % Test
+  "org.apache.logging.log4j" % "log4j-slf4j-impl" % "2.8.1" % Test,
+  "junit" % "junit" % "4.12" % Test,
+  "org.scalatest" %% "scalatest-funsuite" % "3.2.5" % "test"
+
 
 )
 
